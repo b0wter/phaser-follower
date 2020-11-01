@@ -34,23 +34,35 @@ function preload() {
     this.load.image('lemming', 'lemming.png');
 }
 
-function createFollower(part) {
+function createFollower() {
     var lemming = this.add.follower(part.path, 50, 500, 'lemming');
+    // Die Eigenschaft "currentPathIndex" gibt es auf dem Objekt an sich nicht,
+    // aber in Javascript kann man diese beliebig hinzufügen.
+    // Die Eigenschaft wird benötigt, damit wir uns merken können auf welchem
+    // Pfad sich der Lemming gerade befindet.
     lemming.currentPathIndex = 0;
     lemming.startFollow({
-        duration: part.duration,
+        // Die Dauer ist nur für das erste Teilstück,
+        // die Dauert für die anderen Stücke wird später gesetzt.
+        duration: parts[0].duration,
         yoyo: false,
         repeat: 0,
         rotateToPath: true,
         verticalAdjust: true,
         onComplete: (function () {
+            // Wenn der Pfad abgefahren wurde wird dieser Code ausgeführt.
             console.log(lemming);
+            // Den Index um eins erhöhen, weil das Teilstück fertig ist.
             lemming.currentPathIndex++;
             const index = lemming.currentPathIndex;
+
             if(index >= parts.length)
+                // Wenn der Index außerhalb des gültigen Bereichs liegt wird der Lemming zerstört.
                 lemming.destroy();
             else {
+                // Wenn es weitere Teilstücke gibt, dann wird das nächste gesetzt.
                 lemming.setPath(parts[index].path);
+                // Und die Dauer wird auch gesetzt.
                 lemming.pathConfig.duration = parts[index].duration;
             }
         }).bind(this)
@@ -58,13 +70,11 @@ function createFollower(part) {
 }
 
 function create() {
+    // Zeichnet die Route
     var graphics = this.add.graphics();
-
     graphics.lineStyle(1, 0xffffff, 1);
-
     parts.forEach(part => part.path.draw(graphics, 128));
 
-    const follower = createFollower.bind(this);
-
-    setInterval(() => follower(parts[0]), 1500);
+    // Erzeugt alle 1.5 Sekunden einen neuen Follower.
+    setInterval(() => createFollower.bind(this)(), 1500);
 }
