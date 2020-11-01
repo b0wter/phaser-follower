@@ -31,7 +31,10 @@ const parts = [part1, part2, part3, part4]
 var game = new Phaser.Game(config);
 
 function preload() {
-    this.load.image('lemming', 'lemming.png');
+    if(window.location.hostname.includes("github"))
+        this.load.image('lemming', 'phaser-follower/lemming.png');
+    else
+        this.load.image('lemming', 'lemming.png');
 }
 
 function createFollower() {
