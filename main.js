@@ -38,7 +38,7 @@ function preload() {
 }
 
 function createFollower() {
-    var lemming = this.add.follower(part.path, 50, 500, 'lemming');
+    var lemming = this.add.follower(parts[0].path, 50, 500, 'lemming');
     // Die Eigenschaft "currentPathIndex" gibt es auf dem Objekt an sich nicht,
     // aber in Javascript kann man diese beliebig hinzufügen.
     // Die Eigenschaft wird benötigt, damit wir uns merken können auf welchem
